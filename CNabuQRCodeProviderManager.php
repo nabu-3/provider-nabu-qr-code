@@ -43,7 +43,7 @@ class CNabuQRCodeProviderManager extends CNabuRenderModuleManagerAdapter
      */
     public function __construct()
     {
-        parent::__construct(NABU_SPREADSHEET_VENDOR_KEY, NABU_SPREADSHEET_MODULE_KEY);
+        parent::__construct(NABU_QRCODE_VENDOR_KEY, NABU_QRCODE_MODULE_KEY);
     }
 
     public function enableManager()
