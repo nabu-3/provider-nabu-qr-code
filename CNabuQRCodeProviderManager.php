@@ -25,6 +25,8 @@ use nabu\http\managers\CNabuHTTPRenderDescriptor;
 
 use nabu\render\adapters\CNabuRenderModuleManagerAdapter;
 
+use nabu\render\descriptors\CNabuRenderInterfaceDescriptor;
+
 use nabu\http\app\base\CNabuHTTPApplication;
 
  /**
@@ -35,7 +37,7 @@ use nabu\http\app\base\CNabuHTTPApplication;
   */
 class CNabuQRCodeProviderManager extends CNabuRenderModuleManagerAdapter
 {
-    /** @var CNabuHTTPRenderDescriptor HTML to QRCode Render Transform descriptor. */
+    /** @var CNabuRenderInterfaceDescriptor HTML to QRCode Render Transform descriptor. */
     private $nb_qrcode_render_descriptor = null;
 
     /**
@@ -50,10 +52,15 @@ class CNabuQRCodeProviderManager extends CNabuRenderModuleManagerAdapter
     {
         $nb_engine = CNabuEngine::getEngine();
 
-        ($this->nb_qrcode_render_descriptor = new CNabuHTTPRenderDescriptor())
-            ->setKey('QRCODE')
-            ->setClassName('providers\nabu\qrcode\renders\CNabuQRCodeHTTPRender')
-        ;
+        $this->nb_qrcode_render_descriptor = new CNabuRenderInterfaceDescriptor(
+            $this,
+            'NabuQRCodeRender',
+            'Nabu QR Code Render',
+            __NAMESPACE__,
+            'CNabuQRCodeRenderInterface',
+            'image/svg'
+        );
+        $nb_engine->registerProviderInterface($this->nb_qrcode_render_descriptor);
 
         return true;
     }
@@ -63,7 +70,9 @@ class CNabuQRCodeProviderManager extends CNabuRenderModuleManagerAdapter
         if ($nb_application instanceof CNabuHTTPApplication) {
             $this->nb_application = $nb_application;
             $this->nb_application->registerRender(
-                $this->nb_qrcode_render_descriptor
+                (new CNabuHTTPRenderDescriptor())
+                    ->setKey('QRCODE')
+                    ->setClassName('providers\nabu\qrcode\renders\CNabuQRCodeHTTPRender')
             );
         }
 
