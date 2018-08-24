@@ -19,7 +19,13 @@
  */
 
 namespace providers\nabu\qrcode\renders;
+
 use nabu\render\adapters\CNabuRenderInterfaceAdapter;
+
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\Image\SvgImageBackEnd;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer;
 
 /**
  * Class to Render a QR Code as an HTTP Response.
@@ -42,6 +48,11 @@ class CNabuQRCodeRenderInterface extends CNabuRenderInterfaceAdapter
 
     public function render()
     {
-        echo 'QR Code Render test';
+        $renderer = new ImageRenderer(
+            new RendererStyle(400),
+            new SvgImageBackEnd()
+        );
+        $writer = new Writer($renderer);
+        echo $writer->writeString('Copyright (c) 2018 nabu-3 Group');
     }
 }

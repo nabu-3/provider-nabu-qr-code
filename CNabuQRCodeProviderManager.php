@@ -19,6 +19,7 @@
  */
 
 namespace providers\nabu\qrcode;
+
 use nabu\core\CNabuEngine;
 use nabu\core\interfaces\INabuApplication;
 
@@ -34,14 +35,8 @@ use nabu\render\descriptors\CNabuRenderInterfaceDescriptor;
   */
 class CNabuQRCodeProviderManager extends CNabuRenderModuleManagerAdapter
 {
-    /** @var CNabuRenderInterfaceDescriptor HTML to QRCode JPEG Render Transform descriptor. */
-    private $nb_qrcode_jpg_render_descriptor = null;
-
-    /** @var CNabuRenderInterfaceDescriptor HTML to QRCode PNG Render Transform descriptor. */
-    private $nb_qrcode_png_render_descriptor = null;
-
-    /** @var CNabuRenderInterfaceDescriptor HTML to QRCode SVG Render Transform descriptor. */
-    private $nb_qrcode_svg_render_descriptor = null;
+    /** @var CNabuRenderInterfaceDescriptor QR Code Render descriptor. */
+    private $nb_qrcode_render_descriptor = null;
 
     /**
      * Default constructor.
@@ -55,35 +50,17 @@ class CNabuQRCodeProviderManager extends CNabuRenderModuleManagerAdapter
     {
         $nb_engine = CNabuEngine::getEngine();
 
-        $this->nb_qrcode_jpg_render_descriptor = new CNabuRenderInterfaceDescriptor(
+        $this->nb_qrcode_render_descriptor = new CNabuRenderInterfaceDescriptor(
             $this,
-            'NabuQRCodeRenderJPEG',
-            'Nabu QR Code Render as JPEG',
+            'NabuQRCodeRender',
+            'Nabu QR Code Render',
             __NAMESPACE__,
             'CNabuQRCodeRenderInterface',
-            'image/jpeg'
+            array(
+                'image/jpeg', 'image/png', 'image/svg+xml'
+            )
         );
-        $nb_engine->registerProviderInterface($this->nb_qrcode_jpg_render_descriptor);
-
-        $this->nb_qrcode_png_render_descriptor = new CNabuRenderInterfaceDescriptor(
-            $this,
-            'NabuQRCodeRenderPNG',
-            'Nabu QR Code Render as PNG',
-            __NAMESPACE__,
-            'CNabuQRCodeRenderInterface',
-            'image/png'
-        );
-        $nb_engine->registerProviderInterface($this->nb_qrcode_png_render_descriptor);
-
-        $this->nb_qrcode_svg_render_descriptor = new CNabuRenderInterfaceDescriptor(
-            $this,
-            'NabuQRCodeRenderSVG',
-            'Nabu QR Code Render as SVG',
-            __NAMESPACE__,
-            'CNabuQRCodeRenderInterface',
-            'image/svg'
-        );
-        $nb_engine->registerProviderInterface($this->nb_qrcode_svg_render_descriptor);
+        $nb_engine->registerProviderInterface($this->nb_qrcode_render_descriptor);
 
         return true;
     }
